@@ -88,23 +88,22 @@ const App = () => {
   const paginatedData = historyData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <div className="flex gap-2 mb-8">
-        <p className="text-2xl capitalize">Crypto currency converter</p>
-        <BuyCrypto size={32} />
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center mt-8 md:mt-0">
+      <p className="text-2xl capitalize inline-flex gap-2 mb-4 md:mb-8 text-center px-4 md:p-0">
+        Crypto currency converter <BuyCrypto size={32} className="hidden md:block" />
+      </p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 max-w-screen-sm w-full">
-          <div className="flex items-center gap-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 max-w-screen-sm w-full px-4 md:p-0">
+          <div className="flex flex-col md:flex-row items-center gap-4">
             <FormField
               control={form.control}
               name="exchangeValue"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-full md:w-fit">
                   <FormControl>
                     <InputIcon
                       startIcon={<DollarCircle />}
-                      className="h-12 w-[12rem] bg-white rounded-xl focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
+                      className="h-12 w-full md:w-[12rem] bg-white rounded-xl focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
                       placeholder="Value"
                       type="number"
                       {...field}
@@ -114,7 +113,7 @@ const App = () => {
                 </FormItem>
               )}
             />
-            <ArrowRight />
+            <ArrowRight className="rotate-90 md:rotate-0 w-6 h-6 md:w-10 md:h-10" />
             <div className="flex w-full">
               <FormField
                 control={form.control}
@@ -164,65 +163,67 @@ const App = () => {
           </Button>
         </form>
       </Form>
-      <div className="max-w-screen-sm bg-white shadow-md rounded-xl mt-4 w-full flex flex-col items-center">
-        <p className="px-2 py-4 font-medium flex gap-1 text-sm items-center">
-          <Timer size={18} />
-          Exchange history
-        </p>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[50px]">No.</TableHead>
-              <TableHead>Exchange value ($)</TableHead>
-              <TableHead>Result</TableHead>
-              <TableHead className="text-right">Date</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedData.length === 0 && (
+      <div className="flex flex-col items-center w-full px-4 md:p-0 mt-4">
+        <div className="max-w-screen-sm bg-white shadow-md rounded-xl w-full flex flex-col items-center">
+          <p className="px-2 py-4 font-medium flex gap-1 text-sm items-center">
+            <Timer size={18} />
+            Exchange history
+          </p>
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={4} className="text-center">
-                  No history found
-                </TableCell>
+                <TableHead className="w-[50px]">No.</TableHead>
+                <TableHead>Exchange value ($)</TableHead>
+                <TableHead>Result</TableHead>
+                <TableHead className="text-right">Date</TableHead>
               </TableRow>
-            )}
-            {paginatedData.length > 0 &&
-              paginatedData.map((history, index) => (
-                <TableRow key={index}>
-                  <TableCell>{(currentPage - 1) * itemsPerPage + index + 1}</TableCell>
-                  <TableCell>{history.exchangeValue.toFixed(2)}$</TableCell>
-                  <TableCell>{`${history.result.toFixed(2)} (${history.currency})`}</TableCell>
-                  <TableCell className="text-right">{new Date(history.date).toLocaleString()}</TableCell>
+            </TableHeader>
+            <TableBody>
+              {paginatedData.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center">
+                    No history found
+                  </TableCell>
                 </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <Pagination className="py-2">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" onClick={() => handlePageChange(Math.max(currentPage - 1, 1))} />
-            </PaginationItem>
-            {Array.from({ length: Math.ceil(historyData.length / itemsPerPage) }).map((_, index) => (
-              <PaginationItem key={index}>
-                <PaginationLink
-                  href="#"
-                  onClick={() => handlePageChange(index + 1)}
-                  className={currentPage === index + 1 ? "active" : ""}
-                >
-                  {index + 1}
-                </PaginationLink>
+              )}
+              {paginatedData.length > 0 &&
+                paginatedData.map((history, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{(currentPage - 1) * itemsPerPage + index + 1}</TableCell>
+                    <TableCell>{history.exchangeValue.toFixed(2)}$</TableCell>
+                    <TableCell>{`${history.result.toFixed(2)} (${history.currency})`}</TableCell>
+                    <TableCell className="text-right">{new Date(history.date).toLocaleString()}</TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+          <Pagination className="py-2">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" onClick={() => handlePageChange(Math.max(currentPage - 1, 1))} />
               </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationNext
-                href="#"
-                onClick={() =>
-                  handlePageChange(Math.min(currentPage + 1, Math.ceil(historyData.length / itemsPerPage)))
-                }
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+              {Array.from({ length: Math.ceil(historyData.length / itemsPerPage) }).map((_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink
+                    href="#"
+                    onClick={() => handlePageChange(index + 1)}
+                    className={currentPage === index + 1 ? "active" : ""}
+                  >
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={() =>
+                    handlePageChange(Math.min(currentPage + 1, Math.ceil(historyData.length / itemsPerPage)))
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </div>
     </div>
   );
